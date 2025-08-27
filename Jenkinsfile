@@ -29,9 +29,10 @@ pipeline {
                 expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
             }
             steps {
+                 // Pause pour demander confirmation à l'utilisateur
+                 input message: 'Les tests ont réussi. Voulez-vous déployer en production ?', ok: 'Oui'
                 script {
-                    // Pause pour demander confirmation à l'utilisateur
-                    input message: 'Les tests ont réussi. Voulez-vous déployer en production ?', ok: 'Oui'
+                   
 
                     echo "🚀 Déploiement en cours..."
 
@@ -40,7 +41,7 @@ pipeline {
 
                     // Lancer le container prod
                     try {
-                        bat "docker run -d --name calculatrice-prod -p 8081:8080 calculatrice"
+                        bat "docker run -d -p 8081:8080 --name calculatrice-prod calculatrice:${env.BUILD_ID} npx http-server -p 8080"
                         echo "✅ Déploiement terminé avec succès sur le port 8081"
                     } catch (err) {
                         echo "❌ Déploiement échoué : ${err}"
