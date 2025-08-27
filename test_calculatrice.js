@@ -1,5 +1,5 @@
 const { Builder, By } = require('selenium-webdriver');
-const chrome = require('selenium/chrome-driver');
+const chrome = require('selenium-webdriver/chrome');
 
 (async function testCalculatrice() {
 
