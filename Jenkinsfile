@@ -26,7 +26,7 @@ pipeline {
                         choice(name: 'CHOIX', choices: ['Oui', 'Non'], description: 'Choisissez')
                     ])
 
-                    if (userInput['CHOIX'] == 'Oui') {
+                    if (userInput.CHOIX == 'Oui') {
                         echo "🚀 Déploiement en cours..."
                         bat 'docker rm -f calculatrice-prod || true'
 
