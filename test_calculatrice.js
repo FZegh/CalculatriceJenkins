@@ -4,7 +4,7 @@ const chrome = require('selenium-webdriver/chrome');
 (async function testCalculatrice() {
 
      let options = new chrome.Options()
-        .headless()                      // mode headless
+        .addArguments('--headless')                   // mode headless
         .addArguments('--no-sandbox')    // utile pour Docker
         .addArguments('--disable-dev-shm-usage'); // utile pour Docker
     // Initialiser le driver Chrome
