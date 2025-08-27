@@ -31,6 +31,8 @@ pipeline {
                 
                 script {
                     // Pause pour demander confirmation à l'utilisateur
+                    Poser la question : Voulez-vous déployer ? Oui/Non
+                    input(message: 'Voulez-vous déployer en production ?', ok: 'Oui')
 
                     
                         echo "🚀 Déploiement en cours..."
