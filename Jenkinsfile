@@ -40,7 +40,7 @@ pipeline {
                         echo "🚀 Déploiement en cours..."
 
                         // Supprimer un ancien container prod s’il existe
-                        bat(script: 'docker rm -f calculatrice-prod', returnStatus: true)
+                        bat(returnStatus: true, script: 'docker rm -f calculatrice-prod')
 
                         // Lancer l’appli en prod (juste le serveur statique)
                         bat "docker run -d -p 8081:8080 --name calculatrice-prod calculatrice-${env.BUILD_ID} npx http-server -p 8080"
