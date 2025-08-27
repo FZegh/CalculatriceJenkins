@@ -15,7 +15,7 @@ pipeline {
                 bat "docker build --no-cache -t calculatrice ."
 
               // Stopper et supprimer le container de test
-               bat "docker rm -f calculatrice-test" || true
+               bat "docker rm -f calculatrice-test"
 
                  // Lancer un container temporaire pour les tests
                 bat "docker run -d --name calculatrice-test calculatrice"
