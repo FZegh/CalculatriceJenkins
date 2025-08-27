@@ -8,10 +8,23 @@ RUN apt-get update && apt-get install -y curl gnupg \
 
 # Définir le repertoire de travail
 
+WORKDIR /app
+
 # Copier les fichiers vers le repertoire de travail
+
+COPY . .
 
 # Installer selenium-webdriver + http-server
 
+RUN npm install selenium-webdriver --save && npm install http-server --save-dev
+
+
 # Exposer le port 
 
+EXPOSE 8080
+
 # Démarrer le serveur statique + attendre + lancer les tests
+
+CMD sh -c "npx http-server -p 8080 & sleep 2 && node test_calculatrice.js"
+
+
