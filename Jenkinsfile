@@ -24,7 +24,7 @@ pipeline {
 
         stage('Déployer en production') {
             when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
+                expression {currentBuild.result == 'SUCCESS' }
             }
             steps {
                 script {
