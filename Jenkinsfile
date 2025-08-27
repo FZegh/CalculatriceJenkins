@@ -4,8 +4,8 @@ pipeline {
     stages {
         stage('Cloner le code') {
             steps {
+                git branch: 'main', url: 'https://github.com/FZegh/CalculatriceJenkins'
                 // Cloner le repo Github
-                git branch: 'main', url: 'https://github.com/copeihsinoc/CalculatriceJenkins'
             }
         }
 
@@ -18,7 +18,7 @@ pipeline {
                 bat "docker rm -f calculatrice-test || true"
 
                 // Lancer le container temporaire pour les tests
-                bat "docker run -d --name calculatrice-test calculatrice"
+                bat "docker run --name calculatrice-test calculatrice"
             }
         }
 
