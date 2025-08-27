@@ -9,12 +9,21 @@ pipeline {
         }
 
         stage('Construire et tester') {
-            steps {
-                bat 'docker build --no-cache -t calculatrice-jenkins .'
-                bat docker run CalculatriceJenkins "npx http-server -p 8080 & timeout /t 2 & node test_calculatrice.js"'
-            }
-        }
+    steps {
+        // Construire l'image Docker
+        bat 'docker build --no-cache -t calculatrice-jenkins .'
 
+        // Lancer un container temporaire pour les tests sur un port différent (8081)
+        bat 'docker run --rm -d --name calculatrice-jenkins-test -p 8081:8080 calculatrice-jenkins npx http-server -p 8080'
+
+        // Exécuter les tests à l'intérieur du container
+        bat 'docker exec calculatrice-jenkins-test node test_calculatrice.js'
+
+        // Stopper le container de test
+        bat 'docker rm -f calculatrice-jenkins-test'
+    }
+}
+    }
         stage('Déployer en production') {
             steps {
                 script {
