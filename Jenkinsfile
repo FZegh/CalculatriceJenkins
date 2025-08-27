@@ -5,7 +5,7 @@ pipeline {
         stage('Cloner le code') {
             steps {
                 // On clone le repo Github
-                git branch: 'main', url: 'https://github.com/fzegh/CalculatriceJenkins.git', credentialsId: 'github-pat'
+                git branch: 'main', url: 'https://github.com/fzegh/CalculatriceJenkins'
             }
         }
 
