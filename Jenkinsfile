@@ -12,28 +12,26 @@ pipeline {
         stage('Construire et tester') {
             steps {
                 // Construire l'image Docker
-                bat "docker build --no-cache -t calculatrice ."
+                bat "docker build --no-cache -t calculatrice:${env.BUILD_ID} .""
 
                 // Supprimer le container de test s’il existe
                 bat "docker rm -f calculatrice-test || true"
 
                 // Lancer le container temporaire pour les tests
-                bat "docker run --name calculatrice-test calculatrice"
+                 bat "docker run --rm calculatrice:${env.BUILD_ID} node test_calculatrice.js"
             }
         }
 
         stage('Déployer en production') {
             when {
-                expression {currentBuild.result == 'SUCCESS' }
+                expression {currentBuild.result == null || currentBuild.result == 'SUCCESS' }
             }
             steps {
-                //input message: 'Voulez-vous déployer en production ?', ok:'Oui'
+                input message: 'Les tests ont réussi. Voulez-vous déployer en production ?', ok:'Oui'
                 
                 script {
                     // Pause pour demander confirmation à l'utilisateur
-                    Poser la question : Voulez-vous déployer ? Oui/Non
-                    input(message: 'Voulez-vous déployer en production ?', ok: 'Oui')
-
+        
                     
                         echo "🚀 Déploiement en cours..."
 
@@ -47,6 +45,7 @@ pipeline {
                         } catch (err) {
                             echo "❌ Déploiement échoué : ${err}"
                             currentBuild.result = 'FAILURE'
+                            error("Arrêt du pipeline car le déploiement a échoué")
                         }
             }
         }
