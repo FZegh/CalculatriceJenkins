@@ -19,7 +19,7 @@ pipeline {
                     bat "docker rm -f calculatrice-test || true"
 
                     // Lancer le container temporaire pour les tests
-                    bat "docker run --rm calculatrice:${env.BUILD_ID} node test_calculatrice.js"
+                    bat "docker run --rm calculatrice:${env.BUILD_ID}"
                 } // ferme script
             } // ferme steps
         } // ferme stage
