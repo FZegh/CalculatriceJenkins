@@ -4,14 +4,14 @@ pipeline {
     stages {
         stage('Cloner le code') {
             steps {
-                git branch: 'main', url: 'https://github.com/fzegh/CalculatriceJenkins.git', credentialsId: 'github-pat'
+                git branch: 'main', url: 'https://github.com/fzegh/CalculatriceJenkins.git'
             }
         }
 
         stage('Construire et tester') {
             steps {
                 bat 'docker build --no-cache -t calculatrice-jenkins .'
-                bat 'start /B cmd /c "npx http-server -p 8080 & timeout /t 2 & node test_calculatrice.js"'
+                bat docker run CalculatriceJenkins "npx http-server -p 8080 & timeout /t 2 & node test_calculatrice.js"'
             }
         }
 
