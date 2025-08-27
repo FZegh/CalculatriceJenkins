@@ -15,10 +15,10 @@ pipeline {
                 bat "docker build --no-cache -t calculatrice:${env.BUILD_ID} ."
 
                 // Lancer un container temporaire pour les tests
-                bat "docker run --name calculatrice-test -d -p 8082:8080 calculatrice:${env.BUILD_ID} npx http-server -p 8080"
+                bat "docker run --name calculatrice-test:${env.BUILD_ID} -d -p 8082:8080 calculatrice:${env.BUILD_ID} npx http-server -p 8080"
 
                 // Exécuter les tests à l'intérieur du container
-                bat "docker exec calculatrice-test node test_calculatrice.js"
+                bat "docker exec calculatrice-test:${env.BUILD_ID} node test_calculatrice.js"
 
                 // Stopper et supprimer le container de test
                 bat "docker rm -f calculatrice-test" || true
