@@ -12,14 +12,13 @@ pipeline {
         stage('Construire et tester') {
             steps {
                 // Construire l'image Docker
-                bat "docker build --no-cache -t calculatrice-${env.BUILD_ID} ."
+                bat "docker build --no-cache -t calculatrice ."
 
-                // Lancer un container temporaire pour les tests
-                bat "docker run -d --name calculatrice-test-${env.BUILD_ID} calculatrice-${env.BUILD_ID}"
+              // Stopper et supprimer le container de test
+               bat "docker rm -f calculatrice-test" || true
 
-
-                // Stopper et supprimer le container de test
-               bat "docker rm -f calculatrice-test-${env.BUILD_ID}" || true
+                 // Lancer un container temporaire pour les tests
+                bat "docker run -d --name calculatrice-test calculatrice"
             }
         }
 
@@ -38,10 +37,10 @@ pipeline {
                         echo "🚀 Déploiement en cours..."
 
                         // Supprimer un ancien container prod s’il existe
-                        bat(returnStatus: true, script: 'docker rm -f calculatrice-prod')
+                        bat 'docker rm -f calculatrice-prod || true'
 
                         // Lancer l’appli en prod (juste le serveur statique)
-                        bat "docker run -d --name calculatrice-prod -p 8081:8080 calculatrice-${env.BUILD_ID}"
+                        bat "docker run -d --name calculatrice-prod -p 8081:8080 calculatrice"
                     } else {
                         echo "Déploiement annulé par l'utilisateur."
                     }
