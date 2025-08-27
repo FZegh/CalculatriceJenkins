@@ -27,7 +27,7 @@ pipeline {
                 expression {currentBuild.result == 'SUCCESS' }
             }
             steps {
-                input message: 'Voulez-vous déployer en production ?', ok:"Oui"
+                //input message: 'Voulez-vous déployer en production ?', ok:'Oui'
                 
                 script {
                     // Pause pour demander confirmation à l'utilisateur
