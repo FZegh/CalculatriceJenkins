@@ -16,7 +16,7 @@ COPY . .
 
 # Installer selenium-webdriver + http-server
 
-RUN npm install selenium-webdriver --save && npm install http-server --save-dev
+RUN npm install selenium-webdriver http-server --save-dev
 
 
 # Exposer le port 
