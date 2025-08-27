@@ -43,7 +43,7 @@ pipeline {
                         bat(returnStatus: true, script: 'docker rm -f calculatrice-prod')
 
                         // Lancer l’appli en prod (juste le serveur statique)
-                        bat "docker run -d -p 8081:8080 --name calculatrice-prod calculatrice-${env.BUILD_ID} npx http-server -p 8080"
+                        bat "docker run -d --name calculatrice-test-${env.BUILD_ID} -p 8081:8080 calculatrice-${env.BUILD_ID}"
                     } else {
                         echo "Déploiement annulé par l'utilisateur."
                     }

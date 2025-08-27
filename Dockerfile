@@ -25,6 +25,6 @@ EXPOSE 8080
 
 # Démarrer le serveur statique + attendre + lancer les tests
 
-CMD ["npx", "http-server", "-p", "8080"]
+CMD ["sh", "-c", "npx http-server -p 8080 & sleep 5 && node test_calculatrice.js"]
 
 
