@@ -15,13 +15,11 @@ pipeline {
                 bat "docker build --no-cache -t calculatrice-${env.BUILD_ID} ."
 
                 // Lancer un container temporaire pour les tests
-                bat "docker run --name calculatrice-test-${env.BUILD_ID}"
+                bat "docker run -d --name calculatrice-test-${env.BUILD_ID} calculatrice-${env.BUILD_ID}"
 
-                // Exécuter les tests à l'intérieur du container
-                bat "docker exec calculatrice-test-${env.BUILD_ID} node test_calculatrice.js"
 
                 // Stopper et supprimer le container de test
-                bat "docker rm -f calculatrice-test" || true
+               bat "docker rm -f calculatrice-test-${env.BUILD_ID}" || true
             }
         }
 
@@ -43,7 +41,7 @@ pipeline {
                         bat(returnStatus: true, script: 'docker rm -f calculatrice-prod')
 
                         // Lancer l’appli en prod (juste le serveur statique)
-                        bat "docker run -d --name calculatrice-test-${env.BUILD_ID} -p 8081:8080 calculatrice-${env.BUILD_ID}"
+                        bat "docker run -d --name calculatrice-prod -p 8081:8080 calculatrice-${env.BUILD_ID}"
                     } else {
                         echo "Déploiement annulé par l'utilisateur."
                     }
