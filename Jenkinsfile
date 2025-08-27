@@ -12,7 +12,7 @@ pipeline {
         stage('Construire et tester') {
             steps {
                 // Construire l'image Docker
-                bat "docker build --no-cache -t calculatrice:${env.BUILD_ID} ."
+                bat "docker build --no-cache -t calculatrice-${env.BUILD_ID} ."
 
                 // Lancer un container temporaire pour les tests
                 bat "docker run --name calculatrice-test-${env.BUILD_ID} -d -p 8082:8080 calculatrice-${env.BUILD_ID} npx http-server -p 8080"
@@ -43,7 +43,7 @@ pipeline {
                         bat(script: 'docker rm -f calculatrice-prod', returnStatus: true)
 
                         // Lancer l’appli en prod (juste le serveur statique)
-                        bat "docker run -d -p 8081:8080 --name calculatrice-prod calculatrice:${env.BUILD_ID} npx http-server -p 8080"
+                        bat "docker run -d -p 8081:8080 --name calculatrice-prod calculatrice-${env.BUILD_ID} npx http-server -p 8080"
                     } else {
                         echo "Déploiement annulé par l'utilisateur."
                     }
