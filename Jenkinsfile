@@ -32,11 +32,11 @@ pipeline {
             steps {
                 script {
                     // Poser la question à l'utilisateur
-                    def reponse = input(message: 'Voulez-vous déployer en production ?', parameters: [
+                    def userInput = input(message: 'Voulez-vous déployer en production ?', parameters: [
                         choice(name: 'CHOIX', choices: ['Oui', 'Non'], description: 'Choisissez')
                     ])
 
-                    if (reponse == 'Oui') {
+                    if (userInput['CHOIX'] == 'Oui') {
                         echo "🚀 Déploiement en cours..."
 
                         // Supprimer un ancien container prod s’il existe
