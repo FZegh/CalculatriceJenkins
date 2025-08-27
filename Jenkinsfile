@@ -12,47 +12,43 @@ pipeline {
         stage('Construire et tester') {
             steps {
                 script {
-                // Construire l'image Docker
-                bat "docker build --no-cache -t calculatrice:${env.BUILD_ID} ."
+                    // Construire l'image Docker
+                    bat "docker build --no-cache -t calculatrice:${env.BUILD_ID} ."
 
-                // Supprimer le container de test s’il existe
-                bat "docker rm -f calculatrice-test || true"
+                    // Supprimer le container de test s’il existe
+                    bat "docker rm -f calculatrice-test || true"
 
-                // Lancer le container temporaire pour les tests
-                 bat "docker run --rm calculatrice:${env.BUILD_ID} node test_calculatrice.js"
-            }
-        }
-        }
+                    // Lancer le container temporaire pour les tests
+                    bat "docker run --rm calculatrice:${env.BUILD_ID} node test_calculatrice.js"
+                } // ferme script
+            } // ferme steps
+        } // ferme stage
+
         stage('Déployer en production') {
             when {
-                expression {currentBuild.result == null || currentBuild.result == 'SUCCESS' }
+                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
             }
             steps {
-                input message: 'Les tests ont réussi. Voulez-vous déployer en production ?', ok:'Oui'
-                
                 script {
                     // Pause pour demander confirmation à l'utilisateur
+                    input message: 'Les tests ont réussi. Voulez-vous déployer en production ?', ok: 'Oui'
 
-                    input message: 'Les tests ont réussi. Voulez-vous déployer en production ?', ok:'Oui'
-                
-        
-                    
-                        echo "🚀 Déploiement en cours..."
+                    echo "🚀 Déploiement en cours..."
 
-                        // Supprimer l'ancien container prod s’il existe
-                        bat "docker rm -f calculatrice-prod || true"
+                    // Supprimer l'ancien container prod s’il existe
+                    bat "docker rm -f calculatrice-prod || true"
 
-                        // Lancer le container prod
-                        try {
-                            bat "docker run -d --name calculatrice-prod -p 8081:8080 calculatrice"
-                            echo "✅ Déploiement terminé avec succès sur le port 8081"
-                        } catch (err) {
-                            echo "❌ Déploiement échoué : ${err}"
-                            currentBuild.result = 'FAILURE'
-                            error("Arrêt du pipeline car le déploiement a échoué")
-                        }
-            }
-        }
-    }
-}
-}
+                    // Lancer le container prod
+                    try {
+                        bat "docker run -d --name calculatrice-prod -p 8081:8080 calculatrice"
+                        echo "✅ Déploiement terminé avec succès sur le port 8081"
+                    } catch (err) {
+                        echo "❌ Déploiement échoué : ${err}"
+                        currentBuild.result = 'FAILURE'
+                        error("Arrêt du pipeline car le déploiement a échoué")
+                    }
+                } // ferme script
+            } // ferme steps
+        } // ferme stage
+    } // ferme stages
+} // ferme pipeline
