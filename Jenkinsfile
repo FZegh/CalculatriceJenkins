@@ -11,8 +11,9 @@ pipeline {
 
         stage('Construire et tester') {
             steps {
+                script {
                 // Construire l'image Docker
-                bat "docker build --no-cache -t calculatrice:${env.BUILD_ID} .""
+                bat "docker build --no-cache -t calculatrice:${env.BUILD_ID} ."
 
                 // Supprimer le container de test s’il existe
                 bat "docker rm -f calculatrice-test || true"
@@ -21,7 +22,7 @@ pipeline {
                  bat "docker run --rm calculatrice:${env.BUILD_ID} node test_calculatrice.js"
             }
         }
-
+        }
         stage('Déployer en production') {
             when {
                 expression {currentBuild.result == null || currentBuild.result == 'SUCCESS' }
@@ -31,6 +32,9 @@ pipeline {
                 
                 script {
                     // Pause pour demander confirmation à l'utilisateur
+
+                    input message: 'Les tests ont réussi. Voulez-vous déployer en production ?', ok:'Oui'
+                
         
                     
                         echo "🚀 Déploiement en cours..."
