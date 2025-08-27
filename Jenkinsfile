@@ -27,11 +27,12 @@ pipeline {
                 expression {currentBuild.result == 'SUCCESS' }
             }
             steps {
+                input message: 'Voulez-vous déployer en production ?', ok:"Oui"
+                
                 script {
                     // Pause pour demander confirmation à l'utilisateur
-                    input message: 'Voulez-vous déployer en production ?', ok:"Oui"
 
-                    script{
+                    
                         echo "🚀 Déploiement en cours..."
 
                         // Supprimer l'ancien container prod s’il existe
@@ -45,7 +46,6 @@ pipeline {
                             echo "❌ Déploiement échoué : ${err}"
                             currentBuild.result = 'FAILURE'
                         }
-                } // ferme script
             }
         }
     }
