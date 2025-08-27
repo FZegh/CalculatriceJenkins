@@ -4,34 +4,37 @@ pipeline {
     stages {
         stage('Cloner le code') {
             steps {
-                // Cloner le repo Github
                 git branch: 'main', url: 'https://github.com/fzegh/CalculatriceJenkins.git', credentialsId: 'github-pat'
             }
         }
 
         stage('Construire et tester') {
             steps {
-                // Construire l'image Docker sans cache
                 bat 'docker build --no-cache -t calculatrice-jenkins .'
-
-                // Lancer le container → démarre http-server + exécute test_calculatrice.js
-                bat 'start /B cmd /c "npx http-server -p 8080 & sleep 2 && node test_calculatrice.js"'
+                bat 'start /B cmd /c "npx http-server -p 8080 & timeout /t 2 & node test_calculatrice.js"'
             }
         }
 
         stage('Déployer en production') {
             steps {
                 script {
-                    // Poser la question : Voulez-vous déployer ?
+                    // Vérifier si le container existe déjà
+                    def containerExiste = bat(script: 'docker ps -a --format "{{.Names}}" | findstr mon_container_prod', returnStatus: true) == 0
+                    if (containerExiste) {
+                        echo "Un container existant nommé 'mon_container_prod' a été trouvé."
+                    } else {
+                        echo "Aucun container existant trouvé."
+                    }
+
+                    // Poser la question à l'utilisateur
                     def reponse = input message: 'Voulez-vous déployer ?', parameters: [
                         choice(name: 'CHOIX', choices: ['Oui', 'Non'], description: 'Choisissez')
                     ]
 
                     if (reponse == 'Oui') {
-                        // Supprimer un ancien container prod s’il existe
-                        bat 'docker rm -f mon_container_prod || true'
-
-                        // Lancer l’appli en prod (serveur statique uniquement)
+                        if (containerExiste) {
+                            bat 'docker rm -f mon_container_prod'
+                        }
                         bat 'docker run -d --name mon_container_prod -p 8080:8080 calculatrice-jenkins npx http-server -p 8080'
                     } else {
                         echo "Déploiement annulé par l'utilisateur."
