@@ -2,7 +2,7 @@ FROM selenium/standalone-chrome:latest
 
 USER root
 RUN apt-get update && apt-get install -y curl gnupg \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -25,6 +25,6 @@ EXPOSE 8080
 
 # Démarrer le serveur statique + attendre + lancer les tests
 
-CMD sh -c "npx http-server -p 8080 & sleep 2 && node test_calculatrice.js"
+CMD ["npx", "http-server", "-p", "8080"]
 
 

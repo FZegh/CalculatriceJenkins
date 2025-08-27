@@ -21,7 +21,7 @@ pipeline {
                 bat "docker exec calculatrice-test node test_calculatrice.js"
 
                 // Stopper et supprimer le container de test
-                bat "docker rm -f calculatrice-test"
+                bat "docker rm -f calculatrice-test" || true
             }
         }
 
