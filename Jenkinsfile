@@ -29,12 +29,9 @@ pipeline {
             steps {
                 script {
                     // Pause pour demander confirmation à l'utilisateur
-                    def userInput = input(message: 'Voulez-vous déployer en production ?', parameters: [
-                        choice(name: 'CHOIX', choices: ['Oui', 'Non'], description: 'Choisissez')
-                    ])
+                    input message: 'Voulez-vous déployer en production ?', ok:"Oui"
 
-                    def choix = userInput.get('CHOIX')
-                    if ("Oui".equals(choix)) {
+                    script{
                         echo "🚀 Déploiement en cours..."
 
                         // Supprimer l'ancien container prod s’il existe
@@ -48,10 +45,6 @@ pipeline {
                             echo "❌ Déploiement échoué : ${err}"
                             currentBuild.result = 'FAILURE'
                         }
-
-                    } else {
-                        echo "Déploiement annulé par l'utilisateur."
-                    }
                 } // ferme script
             }
         }
