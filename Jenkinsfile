@@ -15,7 +15,7 @@ pipeline {
                 bat "docker build --no-cache -t calculatrice-${env.BUILD_ID} ."
 
                 // Lancer un container temporaire pour les tests
-                bat "docker run --name calculatrice-test-${env.BUILD_ID} -d -p 8081:8080 calculatrice-${env.BUILD_ID} npx http-server -p 8080"
+                bat "docker run --name calculatrice-test-${env.BUILD_ID}"
 
                 // Exécuter les tests à l'intérieur du container
                 bat "docker exec calculatrice-test-${env.BUILD_ID} node test_calculatrice.js"
