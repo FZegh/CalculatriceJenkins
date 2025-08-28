@@ -41,7 +41,7 @@ pipeline {
 
                     // Lancer le container prod
                     try {
-                        bat "docker run -d -p 8081:8080 --name calculatrice-prod calculatrice:${env.BUILD_ID} npx http-server -p 8080 -a 0.0.0.0"
+                        bat "docker run -d -p 8081:8080 --name calculatrice-prod calculatrice:${env.BUILD_ID} npx http-server -p 8080"
                         echo "✅ Déploiement terminé avec succès sur le port 8081"
                     } catch (err) {
                         echo "❌ Déploiement échoué : ${err}"

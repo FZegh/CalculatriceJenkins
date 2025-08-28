@@ -6,8 +6,8 @@ const chrome = require('selenium-webdriver/chrome');
      let options = new chrome.Options()
         .addArguments('--headless')                   // mode headless
         .addArguments('--no-sandbox')    // utile pour Docker
-        .addArguments('--disable-dev-shm-usage')
-        .addArguments('--disable-gpu'); // utile pour Docker
+        .addArguments('--disable-dev-shm-usage');
+ 
     // Initialiser le driver Chrome
     let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
