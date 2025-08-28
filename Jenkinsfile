@@ -13,13 +13,13 @@ pipeline {
             steps {
                 script {
                     // Construire l'image Docker
-                    bat "docker build --no-cache -t calculatrice:${env.BUILD_ID} ."
+                    bat "docker build --no-cache -t calculatrice:${env.BUILD_ID} ." // -t = tag
 
                     // Supprimer le container de test s’il existe
                     bat "docker rm -f calculatrice-test || true"
 
                     // Lancer le container temporaire pour les tests
-                    bat "docker run --rm calculatrice:${env.BUILD_ID}"
+                    bat "docker run --rm calculatrice:${env.BUILD_ID}" // --rm supprimer les container
                 } // ferme script
             } // ferme steps
         } // ferme stage
@@ -37,7 +37,7 @@ pipeline {
                     echo "🚀 Déploiement en cours..."
 
                     // Supprimer l'ancien container prod s’il existe
-                    bat "docker rm -f calculatrice-prod || true"
+                    bat "docker rm -f calculatrice-prod || true" 
 
                     // Lancer le container prod
                     try {
